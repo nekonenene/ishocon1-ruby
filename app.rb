@@ -120,7 +120,8 @@ ON c.user_id = u.id
 WHERE c.product_id = ?
 ORDER BY c.created_at DESC
 LIMIT 5
-SQL
+    SQL
+
     cmt_count_query = 'SELECT count(*) as count FROM comments WHERE product_id = ?'
 
     erb :index, locals: { products: products, cmt_query: cmt_query, cmt_count_query: cmt_count_query }
@@ -134,7 +135,8 @@ LEFT OUTER JOIN products as p
 ON h.product_id = p.id
 WHERE h.user_id = ?
 ORDER BY h.id DESC
-SQL
+    SQL
+
     products = db.xquery(products_query, params[:user_id])
 
     total_pay = 0
