@@ -6,7 +6,7 @@ GEM
     kgio (2.11.4)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
-    mysql2 (0.5.3)
+    mysql2 (0.5.5)
     mysql2-cs-bind (0.1.1)
       mysql2
     rack (2.2.8)
@@ -30,7 +30,7 @@ PLATFORMS
 DEPENDENCIES
   erubis
   foreman
-  mysql2 (= 0.5.3)
+  mysql2
   mysql2-cs-bind
   sinatra
   unicorn
