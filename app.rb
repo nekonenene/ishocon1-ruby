@@ -177,14 +177,19 @@ SQL
 
     total_pay = db.xquery(total_pay_query, params[:user_id]).first[:total_pay]
 
-    user = db.xquery('SELECT * FROM users WHERE id = ? LIMIT 1', params[:user_id]).first
+    # user = db.xquery('SELECT * FROM users WHERE id = ? LIMIT 1', params[:user_id]).first
+    user = db.xquery('SELECT users.id, users.name FROM users WHERE id = ? LIMIT 1', params[:user_id]).first
+
     erb :mypage, locals: { products: products, user: user, total_pay: total_pay }
   end
 
   get '/products/:product_id' do
-    product = db.xquery('SELECT * FROM products WHERE id = ? LIMIT 1', params[:product_id]).first
-    comments = db.xquery('SELECT * FROM comments WHERE product_id = ?', params[:product_id])
-    erb :product, locals: { product: product, comments: comments }
+    # product = db.xquery('SELECT * FROM products WHERE id = ? LIMIT 1', params[:product_id]).first
+    # comments = db.xquery('SELECT * FROM comments WHERE product_id = ?', params[:product_id])
+    product = db.xquery('SELECT p.id, p.name, p.description, p.image_path, p.price FROM products as p WHERE id = ? LIMIT 1', params[:product_id]).first
+
+    # erb :product, locals: { product: product, comments: comments }
+    erb :product, locals: { product: product }
   end
 
   post '/products/buy/:product_id' do
