@@ -118,27 +118,24 @@ class Ishocon1::WebApp < Sinatra::Base
 
   get '/' do
     page = params[:page].to_i || 0
-    products_query = <<SQL
-SELECT p.id, p.name, p.description, p.image_path, p.price, c.content as comment_content, u.name as comment_user_name
+    products = db.xquery("SELECT p.id, p.name, p.description, p.image_path, p.price FROM products as p ORDER BY id DESC LIMIT 50 OFFSET #{page * 50}")
+    product_ids = products.map { |product| product[:id] }
+
+    comments_query = <<SQL
+SELECT c.content, c.product_id, u.name as user_name
 FROM comments as c
-LEFT OUTER JOIN products as p
-ON c.product_id = p.id
 INNER JOIN users as u
 ON c.user_id = u.id
-ORDER BY p.id DESC, c.created_at DESC
-LIMIT 50
-OFFSET #{page * 50}
+WHERE c.product_id IN (#{product_ids.join(',')})
+ORDER BY c.created_at DESC
 SQL
-
-    products = db.xquery(products_query)
+    comments = db.xquery(comments_query)
     # products.each_with_index do |product, idx|
     #   logger.info(product)
     #   break if idx >= 5
     # end
 
-    product_ids = products.map { |product| product[:id] }
-
-    erb :index, locals: { products: products, product_ids: product_ids }
+    erb :index, locals: { products: products, comments: comments }
 
 #     products = db.xquery("SELECT * FROM products ORDER BY id DESC LIMIT 50 OFFSET #{page * 50}")
 #     cmt_query = <<SQL
