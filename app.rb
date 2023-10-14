@@ -154,6 +154,7 @@ SQL
   end
 
   get '/users/:user_id' do
+    # ユーザーの購入履歴
     products_query = <<SQL
 SELECT p.id, p.name, p.description, p.image_path, p.price, h.created_at
 FROM histories as h
@@ -161,14 +162,20 @@ LEFT OUTER JOIN products as p
 ON h.product_id = p.id
 WHERE h.user_id = ?
 ORDER BY h.id DESC
+LIMIT 30
 SQL
 
     products = db.xquery(products_query, params[:user_id])
 
-    total_pay = 0
-    products.each do |product|
-      total_pay += product[:price]
-    end
+    total_pay_query = <<SQL
+SELECT SUM(p.price) as total_pay
+FROM histories as h
+LEFT OUTER JOIN products as p
+ON h.product_id = p.id
+WHERE h.user_id = ?
+SQL
+
+    total_pay = db.xquery(total_pay_query, params[:user_id]).first[:total_pay]
 
     user = db.xquery('SELECT * FROM users WHERE id = ? LIMIT 1', params[:user_id]).first
     erb :mypage, locals: { products: products, user: user, total_pay: total_pay }
