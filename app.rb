@@ -15,6 +15,8 @@ class Ishocon1::WebApp < Sinatra::Base
   set :public_folder, File.expand_path('../public', __FILE__)
   set :protection, true
 
+  #enable :logging
+
   helpers do
     def config
       @config ||= {
