@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'mysql2'
 require 'mysql2-cs-bind'
 require 'erubis'
+require_relative 'products'
 
 module Ishocon1
   class AuthenticationError < StandardError; end
@@ -118,7 +119,10 @@ class Ishocon1::WebApp < Sinatra::Base
 
   get '/' do
     page = params[:page].to_i || 0
-    products = db.xquery("SELECT p.id, p.name, p.description, p.image_path, p.price FROM products as p ORDER BY id DESC LIMIT 50 OFFSET #{page * 50}")
+    # products = PRODUCTS.sort { |p| p[:id] }
+    # products = db.xquery("SELECT p.id, p.name, p.description, p.image_path, p.price FROM products as p ORDER BY id DESC LIMIT 50 OFFSET #{page * 50}")
+    # products = PRODUCTS.sort { |a, b| b[:id] <=> a[:id] }.slice(page * 50, 50)
+    products = PRODUCTS.reverse.slice(page * 50, 50)
     product_ids = products.map { |product| product[:id] }
 
     comments_query = <<SQL
@@ -186,7 +190,7 @@ SQL
   get '/products/:product_id' do
     # product = db.xquery('SELECT * FROM products WHERE id = ? LIMIT 1', params[:product_id]).first
     # comments = db.xquery('SELECT * FROM comments WHERE product_id = ?', params[:product_id])
-    product = db.xquery('SELECT p.id, p.name, p.description, p.image_path, p.price FROM products as p WHERE id = ? LIMIT 1', params[:product_id]).first
+    product = PRODUCTS.find { |p| p[:id] == params[:product_id].to_i }
 
     # erb :product, locals: { product: product, comments: comments }
     erb :product, locals: { product: product }
