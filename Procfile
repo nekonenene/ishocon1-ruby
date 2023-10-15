@@ -1,1 +1,1 @@
-unicorn: bundle exec unicorn -c unicorn_config.rb
+unicorn: bundle exec unicorn -c unicorn_config.rb --env production
