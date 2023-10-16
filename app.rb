@@ -190,7 +190,8 @@ SQL
   get '/products/:product_id' do
     # product = db.xquery('SELECT * FROM products WHERE id = ? LIMIT 1', params[:product_id]).first
     # comments = db.xquery('SELECT * FROM comments WHERE product_id = ?', params[:product_id])
-    product = PRODUCTS.find { |p| p[:id] == params[:product_id].to_i }
+    #product = PRODUCTS.find { |p| p[:id] == params[:product_id].to_i }
+    product = db.xquery('SELECT * FROM products WHERE id = ? LIMIT 1', params[:product_id]).first
 
     # erb :product, locals: { product: product, comments: comments }
     erb :product, locals: { product: product }
