@@ -7,6 +7,10 @@ init:
 	bundle install --path=vendor/bundle -j 4
 	#mysql -u root -pishocon1 ishocon1 < add_index.sql
 
+.PHONY: start
+start:
+	bundle exec foreman restart
+
 .PHONY: restart
 restart:
 	cd ~/webapp/ruby
