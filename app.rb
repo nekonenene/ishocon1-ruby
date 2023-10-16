@@ -191,7 +191,7 @@ SQL
     # product = db.xquery('SELECT * FROM products WHERE id = ? LIMIT 1', params[:product_id]).first
     # comments = db.xquery('SELECT * FROM comments WHERE product_id = ?', params[:product_id])
     #product = PRODUCTS.find { |p| p[:id] == params[:product_id].to_i }
-    product = db.xquery('SELECT * FROM products WHERE id = ? LIMIT 1', params[:product_id]).first
+    product = db.xquery('SELECT p.id, p.name, p.description, p.image_path, p.price FROM products as p WHERE id = ? LIMIT 1', params[:product_id]).first
 
     # erb :product, locals: { product: product, comments: comments }
     erb :product, locals: { product: product }
