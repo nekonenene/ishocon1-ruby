@@ -2,6 +2,9 @@ require 'sinatra/base'
 require 'mysql2'
 require 'mysql2-cs-bind'
 require 'erubis'
+# require 'redis'
+# require 'connection_pool'
+
 require_relative 'products_slim'
 
 module Ishocon1
@@ -46,6 +49,12 @@ class Ishocon1::WebApp < Sinatra::Base
       client
     end
 
+    def redis
+      @redis ||= ConnectionPool::Wrapper.new do
+        Redis.new(url: 'redis://localhost:6379/0')
+      end
+    end
+  
     def time_now_db
       Time.now - 9 * 60 * 60
     end
@@ -191,6 +200,7 @@ SQL
     # product = db.xquery('SELECT * FROM products WHERE id = ? LIMIT 1', params[:product_id]).first
     # comments = db.xquery('SELECT * FROM comments WHERE product_id = ?', params[:product_id])
     #product = PRODUCTS.find { |p| p[:id] == params[:product_id].to_i }
+    #product = JSON.parse(redis.hget("products", params[:product_id]), symbolize_names: true)
     product = db.xquery('SELECT p.id, p.name, p.description, p.image_path, p.price FROM products as p WHERE id = ? LIMIT 1', params[:product_id]).first
 
     # erb :product, locals: { product: product, comments: comments }
@@ -210,6 +220,7 @@ SQL
   end
 
   get '/initialize' do
+    #redis.flushall
     db.query('DELETE FROM users WHERE id > 5000')
     db.query('DELETE FROM products WHERE id > 10000')
     db.query('DELETE FROM comments WHERE id > 200000')
