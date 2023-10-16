@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'mysql2'
 require 'mysql2-cs-bind'
 require 'erubis'
-require_relative 'products'
+require_relative 'products_slim'
 
 module Ishocon1
   class AuthenticationError < StandardError; end
