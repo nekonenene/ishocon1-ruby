@@ -126,7 +126,7 @@ class Ishocon1::WebApp < Sinatra::Base
     product_ids = products.map { |product| product[:id] }
 
     comments_query = <<SQL
-SELECT c.content, c.product_id, u.name as user_name
+SELECT LEFT(c.content, 25) as content, c.product_id, u.name as user_name
 FROM comments as c
 INNER JOIN users as u
 ON c.user_id = u.id
