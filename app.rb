@@ -160,7 +160,7 @@ SQL
   get '/users/:user_id' do
     # ユーザーの購入履歴
     products_query = <<SQL
-SELECT p.id, p.name, p.description, p.image_path, p.price, h.created_at
+SELECT p.id, p.name, LEFT(p.description, 70) as description, p.image_path, p.price, h.created_at
 FROM histories as h
 LEFT OUTER JOIN products as p
 ON h.product_id = p.id
