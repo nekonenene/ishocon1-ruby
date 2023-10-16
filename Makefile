@@ -5,6 +5,7 @@ init:
 	cd ~/webapp/ruby
 	rbenv install 3.2.2
 	bundle install --path=vendor/bundle -j 4
+	bundle exec ruby init_redis.rb
 	#mysql -u root -pishocon1 ishocon1 < add_index.sql
 
 .PHONY: start
